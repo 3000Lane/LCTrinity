@@ -71,6 +71,7 @@ public:
         {
             { "morph",          SEC_GAMEMASTER,     false, &HandleModifyMorphCommand,          "", NULL },
             { "demorph",        SEC_GAMEMASTER,     false, &HandleDeMorphCommand,              "", NULL },
+			{ "pscale",			SEC_PLAYER,			false, &HandleModifyPScaleCommand,         "", NULL },
             { "modify",         SEC_MODERATOR,      false, NULL,                 "", modifyCommandTable },
             { NULL,             0,                  false, NULL,                               "", NULL }
         };
@@ -722,6 +723,46 @@ public:
 
         return true;
     }
+
+	//AsCustom
+		//Player Scale
+    static bool HandleModifyPScaleCommand(ChatHandler* handler, const char* args)
+    {
+        if (!*args)
+            return false;
+
+        float Scale = (float)atof((char*)args);
+        if (Scale > 1.2f || Scale < 0.8f)
+        {
+            handler->SendSysMessage(LANG_BAD_VALUE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        Player* target = handler->getSelectedPlayer();
+        if (!target)
+        {
+            handler->SendSysMessage(LANG_NO_CHAR_SELECTED);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        if (Player* player = target->ToPlayer())
+        {
+            // check online security
+            if (handler->HasLowerSecurity(player, 0))
+                return false;
+
+            handler->PSendSysMessage(LANG_YOU_CHANGE_SIZE, Scale, handler->GetNameLink(player).c_str());
+            if (handler->needReportToTarget(player))
+                (ChatHandler(player)).PSendSysMessage(LANG_YOURS_SIZE_CHANGED, handler->GetNameLink().c_str(), Scale);
+        }
+
+        target->SetObjectScale(Scale);
+
+        return true;
+    }
+	///AsCustom
 
     //Enable Player mount
     static bool HandleModifyMountCommand(ChatHandler* handler, const char* args)
