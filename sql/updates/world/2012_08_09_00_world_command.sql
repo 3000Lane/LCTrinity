@@ -1,3 +1,3 @@
-DELETE FROM `command` WHERE `name` IN ('pspeed, pscale');
-INSERT INTO `command` (`name`, `security`, `help`) VALUES ('pspeed', '0', 'Syntax: Syntax: .pspeed [$Wert] \r\Erhöht die Laufgeschwindigkeit des angewählten Spielers um einen Wert. Kann nicht unter 0.8 und über 2.0 gehen.');
-INSERT INTO `command` (`name`, `security`, `help`) VALUES ('pscale', '0', 'Syntax: .pscale [$Wert] \r\Vergrößert den angewählten Charakter auf den gesetzten Wert. Kann 1.2 nicht überschreiten und nicht unter 0.8 gesetzt werden.');
+ï»¿DELETE FROM `command` WHERE `name` IN ('pspeed, pscale');
+INSERT INTO `command` (`name`, `security`, `help`) VALUES ('pspeed', '0', 'Syntax: Syntax: .pspeed [$Wert] \r\ErhÃ¶ht die Laufgeschwindigkeit des angewÃ¤hlten Spielers um einen Wert. Kann nicht unter 0.8 und Ã¼ber 2.0 gehen.');
+INSERT INTO `command` (`name`, `security`, `help`) VALUES ('pscale', '0', 'Syntax: .pscale [$Wert] \r\VergrÃ¶ÃŸert den angewÃ¤hlten Charakter auf den gesetzten Wert. Kann 1.2 nicht Ã¼berschreiten und nicht unter 0.8 gesetzt werden.');
