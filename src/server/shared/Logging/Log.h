@@ -53,6 +53,8 @@ class Log
         void outWarn(LogFilterType f, char const* str, ...) ATTR_PRINTF(3,4);
         void outError(LogFilterType f, char const* str, ...) ATTR_PRINTF(3,4);
         void outFatal(LogFilterType f, char const* str, ...) ATTR_PRINTF(3,4);
+		void outChatDB(const char * type, const char * name, const char * to, const char * str, const char * com, uint32 zone, ...)	ATTR_PRINTF(2, 3);
+		void outChatToDB(const char * type, const char * name, const char * to, const char * str, const char * com, uint32 zone, ...)	ATTR_PRINTF(2, 3);
 
         void EnableDBAppenders();
         void outCommand(uint32 account, const char * str, ...) ATTR_PRINTF(3, 4);

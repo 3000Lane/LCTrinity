@@ -25,6 +25,9 @@
 #include "AppenderDB.h"
 #include "LogOperation.h"
 
+#include "Implementation/LoginDatabase.h" // For logging
+extern LoginDatabaseWorkerPool LoginDatabase;
+
 #include <cstdarg>
 #include <cstdio>
 #include <sstream>
@@ -458,6 +461,38 @@ void Log::outCommand(uint32 account, const char * str, ...)
     msg->param1 = account;
 
     write(msg);
+}
+
+void Log::outChatDB(const char * type, const char * name, const char * to, const char * str, const char * com, uint32 zone, ...)
+{
+    if (!str)
+        return;
+
+		//blackplayer
+        va_list ap2;
+        va_start(ap2, str);
+        char nnew_str[MAX_QUERY_LEN];
+        vsnprintf(nnew_str, MAX_QUERY_LEN, str, ap2);
+		outChatToDB(type, name, to, nnew_str, com, zone);
+        va_end(ap2);
+}
+
+void Log::outChatToDB(const char * type, const char * name, const char * to, const char * str, const char * com, uint32 zone, ...)
+{
+    std::string logStr(str);
+    if (logStr.empty())
+        return;
+
+    PreparedStatement* stdb = LoginDatabase.GetPreparedStatement(LOGIN_INS_LOG_CHAT);
+
+    stdb->setString(0, type);
+    stdb->setString(1, name);
+	stdb->setString(2, to);
+    stdb->setString(3, logStr);
+	stdb->setString(4, com);
+	stdb->setInt32(5, zone);
+
+    LoginDatabase.Execute(stdb);
 }
 
 void Log::SetRealmID(uint32 id)
