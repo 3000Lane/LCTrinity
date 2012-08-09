@@ -913,6 +913,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 		pCurrChar->SetDisplayId(display[0].GetUInt32());
 	}
 
+
 	QueryResult result3 = CharacterDatabase.PQuery("SELECT scale FROM character_scale WHERE guid = %u", pCurrChar->GetGUID());
 	if(result3)
 	{
@@ -920,6 +921,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 		float Scale = scale_db[0].GetFloat();
 		pCurrChar->SetFloatValue(OBJECT_FIELD_SCALE_X, Scale);
 	}
+
 
     if (!pCurrChar->GetMap()->AddPlayerToMap(pCurrChar) || !pCurrChar->CheckInstanceLoginValid())
     {
