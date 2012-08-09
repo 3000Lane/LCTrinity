@@ -72,6 +72,7 @@ public:
             { "morph",          SEC_GAMEMASTER,     false, &HandleModifyMorphCommand,          "", NULL },
             { "demorph",        SEC_GAMEMASTER,     false, &HandleDeMorphCommand,              "", NULL },
 			{ "pscale",			SEC_PLAYER,			false, &HandleModifyPScaleCommand,         "", NULL },
+			{ "pspeed",			SEC_PLAYER,			false, &HandleModifyPSpeedCommand,		   "", NULL },
             { "modify",         SEC_MODERATOR,      false, NULL,                 "", modifyCommandTable },
             { NULL,             0,                  false, NULL,                               "", NULL }
         };
@@ -560,7 +561,55 @@ public:
         return true;
     }
 
-    //Edit Player Swim Speed
+	//AsCustom
+	 //Edit Player Speed
+    static bool HandleModifyPSpeedCommand(ChatHandler* handler, const char* args)
+    {
+        if (!*args)
+            return false;
+
+        float Speed = (float)atof((char*)args);
+
+        if (Speed > 2.0f || Speed < 0.8f)
+        {
+            handler->SendSysMessage(LANG_BAD_VALUE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        Player* target = handler->getSelectedPlayer();
+        if (!target)
+        {
+            handler->SendSysMessage(LANG_NO_CHAR_SELECTED);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        // check online security
+        if (handler->HasLowerSecurity(target, 0))
+            return false;
+
+        std::string targetNameLink = handler->GetNameLink(target);
+
+        if (target->isInFlight())
+        {
+            handler->PSendSysMessage(LANG_CHAR_IN_FLIGHT, targetNameLink.c_str());
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        handler->PSendSysMessage(LANG_YOU_CHANGE_SPEED, Speed, targetNameLink.c_str());
+        if (handler->needReportToTarget(target))
+            (ChatHandler(target)).PSendSysMessage(LANG_YOURS_SPEED_CHANGED, handler->GetNameLink().c_str(), Speed);
+
+        target->SetSpeed(MOVE_RUN, Speed, true);
+
+        return true;
+    }
+
+	///AsCustom
+
+	    //Edit Player Swim Speed
     static bool HandleModifySwimCommand(ChatHandler* handler, const char* args)
     {
         if (!*args)
