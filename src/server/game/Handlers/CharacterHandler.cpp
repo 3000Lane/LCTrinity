@@ -904,6 +904,23 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         }
     }
 
+	 // Morph + Scale system blackplayer27
+	QueryResult result2 = CharacterDatabase.PQuery("SELECT morph FROM character_morph WHERE guid = %u", pCurrChar->GetGUID());
+	if(result2)
+	{
+		Field *display = result2->Fetch();
+		pCurrChar->SetNativeDisplayId(display[0].GetUInt32());
+		pCurrChar->SetDisplayId(display[0].GetUInt32());
+	}
+
+	QueryResult result3 = CharacterDatabase.PQuery("SELECT scale FROM character_scale WHERE guid = %u", pCurrChar->GetGUID());
+	if(result3)
+	{
+		Field* scale_db = result3->Fetch();
+		float Scale = scale_db[0].GetFloat();
+		pCurrChar->SetFloatValue(OBJECT_FIELD_SCALE_X, Scale);
+	}
+
     if (!pCurrChar->GetMap()->AddPlayerToMap(pCurrChar) || !pCurrChar->CheckInstanceLoginValid())
     {
         AreaTrigger const* at = sObjectMgr->GetGoBackTrigger(pCurrChar->GetMapId());
