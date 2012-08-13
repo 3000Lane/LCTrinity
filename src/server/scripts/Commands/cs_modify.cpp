@@ -735,7 +735,8 @@ public:
         return true;
     }
 
-    //Edit Player or Creature Scale
+
+//Edit Player or Creature Scale
     static bool HandleModifyScaleCommand(ChatHandler* handler, const char* args)
     {
         if (!*args)
@@ -769,6 +770,13 @@ public:
         }
 
         target->SetObjectScale(Scale);
+		//Blackplayer27
+		uint32 guid = handler->GetSession()->GetPlayer()->GetGUID();
+		QueryResult result = CharacterDatabase.PQuery("SELECT * FROM character_scale WHERE guid = %u", guid);
+		if (result)
+			CharacterDatabase.PExecute("UPDATE character_scale SET scale = %f WHERE guid = %u", Scale, guid);
+		else
+			CharacterDatabase.PExecute("INSERT INTO character_scale (guid, scale, comment) VALUES (%u, %f, 'NULL')", guid, Scale);
 
         return true;
     }
@@ -807,7 +815,14 @@ public:
                 (ChatHandler(player)).PSendSysMessage(LANG_YOURS_SIZE_CHANGED, handler->GetNameLink().c_str(), Scale);
         }
 
-        target->SetObjectScale(Scale);
+		//Blackplayer27
+		handler->GetSession()->GetPlayer()->SetObjectScale(Scale);
+		uint32 guid = handler->GetSession()->GetPlayer()->GetGUID();
+		QueryResult result = CharacterDatabase.PQuery("SELECT * FROM character_scale WHERE guid = %u", guid);
+		if (result)
+			CharacterDatabase.PExecute("UPDATE character_scale SET scale = %f WHERE guid = %u", Scale, guid);
+		else
+			CharacterDatabase.PExecute("INSERT INTO character_scale (guid, scale, comment) VALUES (%u, %f, 'NULL')", guid, Scale);
 
         return true;
     }

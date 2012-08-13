@@ -481,7 +481,7 @@ Valid examples:
 | will be escaped to ||
 */
 
-    if (strlen(message) > 255)
+    if (strlen(message) > 500)
         return false;
 
     // more simple checks
