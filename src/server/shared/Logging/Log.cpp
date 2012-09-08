@@ -473,8 +473,9 @@ void Log::outChatDB(const char * type, const char * name, const char * to, const
         va_start(ap2, str);
         char nnew_str[MAX_QUERY_LEN];
         vsnprintf(nnew_str, MAX_QUERY_LEN, str, ap2);
-		outChatToDB(type, name, to, nnew_str, com, zone);
         va_end(ap2);
+
+		outChatToDB(type, name, to, nnew_str, com, zone);
 }
 
 void Log::outChatToDB(const char * type, const char * name, const char * to, const char * str, const char * com, uint32 zone, ...)
